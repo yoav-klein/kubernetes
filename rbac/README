@@ -1,0 +1,17 @@
+
+RBAC
+-----
+This is a demonstration of Role Based Access Control
+There is a Role and a RoleBinding specs here.
+The Role defines permissions to get, watch and list pods in the
+"my-app" namespace.
+
+The RoleBinding binds the user named "yoav" to that role.
+
+Prerequisites:
+- a namespace named "my-app"
+- a user named "yoav", which means:
+  - a certificate signed with the cluster's CA, with "yoav" as the CN
+  - a .kube/config file pointing to the cluster's URL, and defining a user 
+    named "yoav" (or not necessarily) pointing to the yoav.key and yoav.crt files
+ 
