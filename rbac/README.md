@@ -23,7 +23,7 @@ The RoleBinding binds the user named "yoav" to that role.
 - a user named "yoav", which means:
   - a certificate signed with the cluster's CA, with "yoav" as the CN
   - a .kube/config file pointing to the cluster's URL, and defining a user 
-    named "yoav" (or not necessarily) pointing to the yoav.key and yoav.crt files
+    named "yoav" pointing to the yoav.key and yoav.crt files
  
 ### Running the demo
 - You can use the `create_user_certificate.sh` script to handle the PKI part. 
