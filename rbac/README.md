@@ -66,7 +66,7 @@ $ kubectl apply -f role-binding.yaml
 ```
 
 #### Running the Demo
-To see it working, create a Pod with `curl` in it. Use the `service-account-pod.yaml`
+To see it working, create a Pod with `curl` in it. Use the `service-account-pod.yaml`.
 Connect to the container using:
 ```
 $ kubectl exec -it <pod-name> /bin/sh
