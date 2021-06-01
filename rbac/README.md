@@ -5,7 +5,7 @@ This folder contains a demonstration of Role Based Access Control.
 
 There is a demonstration for dealing with a human user, as well as a ServiceAccount
 
-We are creating a Role which defines permissions to get, list and watch pods.
+We are creating a Role `pod-reader` which defines permissions to get, list and watch pods.
 Then we create a RoleBinding that binds both a User and a ServiceAccount to that Role.
 We'll then demonstrate how to get pods using that User and ServiceAccount
 
@@ -21,16 +21,17 @@ CA of the cluster. This must be done on the master machine, with priviliges to a
 What we are simulating here is a situation in which we have some user
 that we wish to grant him certain permissions in a certain namespace in the cluster.
 
-So we create a Role, specifying the _rules_, which are the permissions given.
+So we create a Role, specifying the _rules_, which are the permissions given. In this case, to get, list and watch pods in the `my-app` namespace.
 And we create a RoleBinding, associating a user with that Role.
-The user is defined only by his name. Anyone that will provide a certificate with 
+
+Notice that a user is defined only by his name. Anyone that will provide a certificate with 
 this name in the `CN` field of the certificate, signed by the cluster's CA will be
 considered to be this user. 
 
-The Role defines permissions to get, watch and list pods in the
-`my-app` namespace.
-
 The RoleBinding binds the user named "yoav" to that role.
+
+NOTE: the CN of the certificate, the name of the user in the `.kube/config` file and the name of the user in the RoleBinding
+must all match.
 
 #### Steps:
 - Make sure you have a machine/user that will simulate that user.
@@ -47,9 +48,42 @@ $ kubectl get pods -n my-app
 You should see it working.
 
 ### Working with ServiceAccount
-Create a ServiceAccount in the namespace:
+A ServiceAccount is used when you want a process in a container in a pod to access the API server of k8s.
+The process is as follows:
+- You create a ServiceAccount in the namespace.
+- Bind the ServiceAccount to a Role using a RoleBinding.
+- Run a pod with the `spec.serviceAccountName` field, specifying the ServiceAccount you created.
+
+#### Steps
+1. Create a ServiceAccount in the namespace:
 ```
 $ kubectl apply -f service-account.yaml
 ```
 
-This ServiceAccount is associated with the Role we defined beforehand.
+2. Bind the ServiceAccount to a Role using the `role-binding.yaml
+```
+$ kubectl apply -f role-binding.yaml
+```
+
+#### Running the Demo
+To see it working, create a Pod with `curl` in it. Use the `service-account-pod.yaml`
+Connect to the container using:
+```
+$ kubectl exec -it <pod-name> /bin/sh
+```
+
+Now go to the directory where the ServiceAccount data is placed:
+```
+$ cd /run/secrets/kubernetes.io/serviceaccount 
+$ ls
+namespace token ca.crt
+```
+
+And run:
+```
+$ CA=$PWD/ca.crt
+$ TOKEN=$(cat token)
+$ curl --cacert $CA --header "Authorization: Bearer $TOKEN" https://kubernetes.default.svc:443/api/v1/namespaces/my-app/pods
+```
+
+You should see a list of pods
