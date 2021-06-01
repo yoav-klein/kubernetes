@@ -9,6 +9,8 @@ subjects:
 - kind: User
   name: yoav
   apiGroup: rbac.authorization.k8s.io
+- kind: ServiceAccount
+  name: my-app-sa
 roleRef:
   kind: Role
   name: pod-reader # this must match the name of the Role you wish to bind to
