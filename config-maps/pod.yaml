@@ -1,0 +1,43 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dogs-application
+  namespace: configmap
+spec:
+  containers:
+  - name: demo
+    image: ubuntu
+    command: ["sleep", "3600"]
+# one way to cosume config map data is with environment variables
+    env:
+    - name: DOG_COLOR
+      valueFrom:
+       configMapKeyRef:
+          name: dog-config
+          key: color
+    - name: DOG_TYPE
+      valueFrom: 
+       configMapKeyRef:
+          name: dog-config
+          key: type
+    volumeMounts:
+# another way is through a volume, configured below in the volumes section
+    - name: config
+      mountPath: /config
+      readOnly: true             
+
+# this volume is of type "configMap". It draws information from the specified configMap object
+# and maps the items specified to the paths specified inside a directory. This directory can be then
+# mounted in a container as seen above
+  volumes:
+  - name: config
+    configMap:
+      name: dog-config
+      items:
+      - key: type
+        path: type
+      - key: color
+        path: color
+      - key: size
+        path: size
