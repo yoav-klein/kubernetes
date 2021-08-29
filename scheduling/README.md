@@ -34,3 +34,21 @@ $ kubectl get pods -o wide
 
 You'll see that the pod is running on your selected node.
 
+Note that you can assign multiple nodes with that label and value, so that the pod will run on one of them.
+
+## nodeName
+In this method, we're just picking a specific node, taking its name and configuring our pod to run on that node.
+
+First, list your nodes and pick one:
+```
+$ kubectl get nodes
+```
+
+Our `nodename-pod.yaml` pod spec is configured to run on a specific node (change the name to a valid node name)
+
+Run it:
+```
+$ kubectl apply -f nodename-pod.yaml
+```
+
+
