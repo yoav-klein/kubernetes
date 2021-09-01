@@ -47,3 +47,37 @@ $ kubectl get pods
 Kubernetes Deployments allows you to _Horizontally scale_ your application by adding or deleting pods to your Deployment.
 You can do so by simply editing the YAML of the Deployment and change the `replicas` setting and then run `kubectl apply -f deployment.yaml`
 or you can use the `kubectl scale` command.
+
+## Rolling updates
+When you change your Deplyoment's pods, such as changing the image of the pod, k8s will _rollout_ your new pods,
+meaning it will first spawn the new pods, and only then destroy the old ones.
+
+You can roll an update in a few ways:
+
+1. Just update the Deployment's YAML and apply it.
+2. Using the `kubectl set image` command
+
+You can view the status of the rollout:
+```
+$ kubectl rollout status deployment/my-deployment
+```
+
+You can view the rollouts history:
+```
+$ kubectl rollout history deployment/my-deployment
+```
+
+
+### Rollback
+You can rollback to a previous revision of a Deployment:
+
+```
+$ kubectl rollout undo deployment/my-deployment
+```
+
+This will undo the last rollout.
+You can also rollback to a specific version
+
+```
+$ kubectl rollout undo deployment/my-deployment --to-revision=<revision>
+```
