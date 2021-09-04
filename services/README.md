@@ -60,3 +60,42 @@ this Service.
 
 Now browse from your browser to: `<one_of_the_nodes_IP>:30800` 
 You should see the Nginx page.
+
+## Service DNS Discovery
+When you create a Service in K8s, the Service has a domain name. The format a domain name is:
+```
+<service-name>.<namespace-name>.svc.<cluster-domain>
+```
+
+The default cluster-domain is `cluster.local`
+
+In our example, the `cluster-ip` Service has a domain name. Let's see it:
+```
+$ kubectl get svc svc-clusterip
+# note the IP address of the service
+$ kubectl exec svc-test-pod -- nslookup <IP>
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      10.98.32.167
+Address 1: 10.98.32.167 svc-clusterip.default.svc.cluster.local
+```
+
+You can see that the domain name is `svc-clusterip.default.svc.cluster.local`
+You can communicate with the Service using this name:
+```
+$ kubectl exec svc-test-pod -- curl svc-clusterip.default.svc.cluster.local
+```
+
+Since our `svc-test-pod` is also running in the default namespace, as the `svc-clusterip` Service, we can simply refer to the Service
+using its name alone:
+
+```
+$ kubectl exec svc-test-pod -- curl svc-clusterip
+```
+
+Note that from Pods within a different namespace, you have to use the fully-qualified name.
+
+## Ingress
+We have a `my-ingress.yaml` file that contains an Ingress definition. That Ingress is routing the path `/somepath` 
+to our `svc-clusterip` Service.
