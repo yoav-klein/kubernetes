@@ -39,3 +39,56 @@ Now get the output that was written by `busybox2`:
 ```
 $ kubectl logs shared-volume-pod -c busybox2
 ```
+
+# PersistentVolumes
+
+We have a demo here of using PersistentVolumes.
+
+First, create a _StorageClass_
+```
+$ kubectl apply -f storage-class.yaml
+```
+
+Now, create a _PersistentVolume_ that references that StorageClass
+```
+$ kubectl apply -f my-pv.yaml
+```
+That PersistentVolume persists data on `/var/output` on the node that the Pod will run on.
+
+Note that the PersistentVolume object is AVAILABLE:
+```
+$ kubectl get pv
+```
+
+Now we'll create a _PersistentVolumeClaim_ that matches the PersistentVolume spec, so the PersistentVolume will be 
+taken by that Claim
+```
+$ kubectl apply -f my-pvc.yaml
+```
+
+Now check the status and see that it is in the _Bound_ state.
+
+Now let's create a Pod to use the PersistentVolume
+```
+$ kubectl apply -f pv-pod.yaml
+
+$ kubectl get pods
+```
+
+See it's in the Completed state. You can log to the node that the Pod ran on and see the data there.
+
+Now let's see Recycle. Delete the Pod and the claim:
+```
+$ kubectl delete pod pv-pod
+$ kubectl delete pvc my-pvc
+```
+
+Now see the state of the PersistentVolume
+```
+$ kubectl get pv
+```
+
+See that it's available
+
+
+
