@@ -69,3 +69,29 @@ $ kubectl describe pod failing-container
 ```
 
 You can see that the Pod is "Unhealthy"
+
+## Multi-container
+In this demo, what I wanted to check is what happens when you have 2 containers in a Pod, with a probe configured (at least for one of them): What happens
+on failure? Do all the containers in the Pod are restarted?
+
+Turns out that no (Which makes sense) - only the failing container is restarted
+
+```
+$ kubectl apply -f multi-container-pod.yaml
+```
+
+After a while, the `failing` container fails. You can know that the `succeeding` pod did not restart, since the `/var/log/success.txt` file is preserved:
+```
+$ kubectl exec multi-container-pod -c succeeding -- cat /var/log/success.txt
+Success!!
+Success!!
+```
+
+So you see that this container hasn't been restarted.
+
+You can also see it this way: Run:
+```
+$ kubectl get pod multi-container-pod 
+```
+
+Under `status.containerStatues` you can see both the containers. You can see that each has its own count of `restarts`

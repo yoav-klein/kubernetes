@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   labels:
     test: liveness
-  name: failing-container
+  name: multi-container-pod
 spec:
   containers:
   - name: failing
@@ -19,3 +19,6 @@ spec:
         - /tmp/healthy
       initialDelaySeconds: 5
       periodSeconds: 5
+  - name: succeeding
+    image: nginx
+    command: ["sh", "-c", "while true; do echo Success!! >> /var/log/success.txt; sleep 60; done"]
