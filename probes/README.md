@@ -1,4 +1,4 @@
-
+i
 # Probes
 ---
 
@@ -50,3 +50,22 @@ $ kubectl get pods
 You can see this pod is in the Running state, but 0/1 containers are ready,
 So traffice will not be routed to this pod.
 that's until the readiness probe is succeeded, in which it will turn to 1/1
+
+## Failing container
+There's an example of a container that fails. That failure is detected by the probe. Create the Pod:
+
+```
+$ kubectl apply -f failing-container.yaml
+```
+
+After a minute or so, you can see that the container is being restarted (run `kubectl get pods`)
+
+You can see what happens in the Pod by running:
+```
+$ kubectl describe pod failing-container
+...
+  Normal   Pulled     4m12s                  kubelet            Successfully pulled image "busybox" in 1.192642965s
+  Warning  Unhealthy  3m28s (x9 over 6m8s)   kubelet            Liveness probe failed: cat: can't open '/tmp/healthy': No such file or directory
+```
+
+You can see that the Pod is "Unhealthy"
