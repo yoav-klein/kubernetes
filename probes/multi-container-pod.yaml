@@ -5,6 +5,7 @@ metadata:
     test: liveness
   name: multi-container-pod
 spec:
+  restartPolicy: Never
   containers:
   - name: failing
     image: busybox
