@@ -6,14 +6,14 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: my-server
+      app: my-deployment
   template: # pod template
     metadata: # we're not specifying a name, since multiple pods will be created
       labels: 
-        app: my-server
+        app: my-deployment
     spec:
       containers:
-      - name: server
-        image: yoavklein3/server:1.0
+      - name: nginx
+        image: nginx:1.17.1
         ports:
         - containerPort: 80
