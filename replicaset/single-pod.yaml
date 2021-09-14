@@ -1,0 +1,11 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: server-v2
+  labels:
+    app: my-app
+spec:
+  containers:
+  - name: server-version-2
+    image: yoavklein3/server:2.0
