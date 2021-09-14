@@ -15,4 +15,4 @@ spec:
     spec:
       containers:
       - name: server
-        image: yoavklein3/server:1.0
+        image: yoavklein3/server:2.0

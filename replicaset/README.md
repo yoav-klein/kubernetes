@@ -10,7 +10,7 @@ So we have a ReplicaSet `my-replicaset` which has a Pod template which runs the 
 ## Create the ReplicaSet
 Create the ReplicaSet with
 
-````
+```
 $ kubectl apply -f replica-set.yaml
 ```
 
