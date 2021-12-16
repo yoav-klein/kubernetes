@@ -7,6 +7,6 @@ const server = http.createServer(function(req, resp) {
     resp.end();
 }); // returns http.Server instance
 
-server.listen(3000);
+server.listen(80);
 
-console.log('Listening on port 3000');
+console.log('Listening on port 80');
