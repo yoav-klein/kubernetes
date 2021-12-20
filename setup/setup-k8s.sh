@@ -61,3 +61,7 @@ init_cluster()
 	sudo chown $(id -u):$(id -g) $HOME/.kube/config
 }
 
+calico()
+{
+	kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+}
