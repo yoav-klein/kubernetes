@@ -16,4 +16,4 @@ spec:
       - name: server
         image: yoavklein3/server:1.0
         ports:
-        - containerPort: 80
+        - containerPort: 3000 # our server application listens on port 3000

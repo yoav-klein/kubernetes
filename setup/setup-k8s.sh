@@ -1,5 +1,5 @@
 
-set -e
+
 install_common_packages()
 {
 	sudo apt-get update && sudo apt-get install -y curl apt-transport-https \
