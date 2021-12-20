@@ -45,10 +45,10 @@ containerd_install()
 
 k8s_install()
 {
-	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-	echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" >> /etc/apt/sources.list.d/kuberenets.list
-	apt-get update && apt-get install -y kubelet=1.21.0-00 kubeadm=1.21.0-00 kubectl=1.21.0-00
-	apt-mark hold kubelet kubeadm kubectl
+	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+	echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kuberenets.list
+	sudo apt-get update && sudo apt-get install -y kubelet=1.21.0-00 kubeadm=1.21.0-00 kubectl=1.21.0-00
+	sudo apt-mark hold kubelet kubeadm kubectl
 
 }
 
