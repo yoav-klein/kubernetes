@@ -11,15 +11,15 @@ containerd_config()
 {
 	# load these kernel modules on boot
 	echo "br_netfilter" | sudo tee /etc/modules-load.d/containerd.conf
-	echo "overlay" | sudo tee /etc/modules-load.d/containerd.conf
+	echo "overlay" | sudo tee -a /etc/modules-load.d/containerd.conf
 	# load them now
 	sudo modprobe overlay
 	sudo modprobe br_netfilter
 
 	# set some system configurations for containerd
 	echo "net.bridge.bridge-nf-call-iptables = 1" | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
-	echo "net.ipv4.ip_forward = 1" | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
-	echo "net.bridge.bridge-nf-call-ip6tables = 1" | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+	echo "net.ipv4.ip_forward = 1" | sudo tee -a /etc/sysctl.d/99-kubernetes-cri.conf
+	echo "net.bridge.bridge-nf-call-ip6tables = 1" | sudo tee -a /etc/sysctl.d/99-kubernetes-cri.conf
 
 	sudo sysctl --system
 }
@@ -53,5 +53,11 @@ k8s_install()
 }
 
 
-
+init_cluster()
+{
+	sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.21.0
+	mkdir -p $HOME/.kube
+	sudo cp -i  /etc/kubernetes/admin.conf $HOME/.kube/config
+	sudo chown $(id -u):$(id -g) $HOME/.kube/config
+}
 
