@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-server-ingress
+  namespace: kube-system
+spec:
+  rules:
+  - host: myapp.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: svc-myserver
+          servicePort: 80
