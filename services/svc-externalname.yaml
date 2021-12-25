@@ -4,5 +4,5 @@ metadata:
     name: svc-externalname
 spec:
     type: ExternalName
-    externalName: 63a53f0cd91c.mylabserver.com
+    externalName: www.google.com
 
