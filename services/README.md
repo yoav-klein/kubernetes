@@ -126,6 +126,14 @@ Address 3: 192.168.235.135 192-168-235-135.svc-headless.default.svc.cluster.loca
 
 You see that it returns A records for all the backend pods.
 
+## ExternalName
+You can define a Service of type `ExternalName` (which is a type of a headless service) which just redirects 
+traffic to an external service reffered to by its domain name.
+
+In the example if `svc-externalname.yaml` we define an ExternalName service that forwards traffic to `www.google.com`.
+
+NOTE: This kind of service may be problematic, since the `Host` header will not match the actual server. (In this example it doesn't really work.)
+
 ## Ingress
 We have a `my-ingress.yaml` file that contains an Ingress definition. That Ingress is routing the path `/somepath` 
 to our `svc-clusterip` Service.
