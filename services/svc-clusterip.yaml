@@ -6,8 +6,8 @@ metadata:
 spec:
   type: ClusterIP
   selector: 
-    app: svc-example
+    app: my-server
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: 3000

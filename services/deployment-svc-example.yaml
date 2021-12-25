@@ -7,14 +7,14 @@ spec:
   replicas: 3
   selector: 
     matchLabels:
-      app: svc-example
+      app: my-server
   template:
     metadata:
       labels:
-        app: svc-example
+        app: my-server
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.19.1
+      - name: server
+        image: yoavklein3/server:1.0
         ports:
-        - containerPort: 80
+        - containerPort: 3000
