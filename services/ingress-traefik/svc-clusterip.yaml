@@ -4,10 +4,12 @@ kind: Service
 metadata:
   name: svc-myserver
 spec:
-  type: ClusterIP
+        #externalTrafficPolicy: Local
+  type: NodePort
   selector: 
     app: my-server
   ports:
   - protocol: TCP
     port: 80
     targetPort: 3000
+    nodePort: 30010

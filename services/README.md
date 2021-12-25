@@ -134,6 +134,20 @@ In the example if `svc-externalname.yaml` we define an ExternalName service that
 
 NOTE: This kind of service may be problematic, since the `Host` header will not match the actual server. (In this example it doesn't really work.)
 
+## ExternalIPs
+You can define an IP address of one of your nodes on which the service will be accessible in.
+See the `svc-externalip.yaml` for example.
+
+```
+$ kubectl apply -f svc-externalip.yaml
+```
+
+Now, you can `curl` the service using the IP of the node:
+```
+$ curl 172.31.22.212
+Hello World! Version 1 
+```
+
 ## Ingress
 We have a `my-ingress.yaml` file that contains an Ingress definition. That Ingress is routing the path `/somepath` 
 to our `svc-clusterip` Service.
