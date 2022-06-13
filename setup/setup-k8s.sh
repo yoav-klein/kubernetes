@@ -1,5 +1,12 @@
 
 
+log()
+{
+	GREEN="\e[32;1m"
+	RESET="\e[0m"
+	echo -e "${GREEN}=== $1${RESET}"
+}
+
 install_common_packages()
 {
 	sudo apt-get update && sudo apt-get install -y curl apt-transport-https \
@@ -64,4 +71,25 @@ init_cluster()
 calico()
 {
 	kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+}
+
+setup_base()
+{
+	log "Installing Required Packages"
+	install_common_packages
+	
+	log "Installing containerd"
+	containerd_config
+	contianerd_install
+
+	log "install Kubernetes"
+	k8s_install
+}
+
+setup_master()
+{
+
+	setup_base
+	init_cluster
+	calico
 }
