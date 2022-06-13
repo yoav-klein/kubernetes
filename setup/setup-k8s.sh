@@ -40,7 +40,7 @@ containerd_install()
 	sudo apt-get update && sudo apt-get install -y containerd
 	sudo mkdir -p /etc/containerd
 	containerd config default | sudo  tee /etc/containerd/config.toml
-	systemctl restart containerd
+	sudo systemctl restart containerd
 }
 
 k8s_install()
