@@ -80,7 +80,7 @@ setup_base()
 	
 	log "Installing containerd"
 	containerd_config
-	contianerd_install
+	containerd_install
 
 	log "install Kubernetes"
 	k8s_install
