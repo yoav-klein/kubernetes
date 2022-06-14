@@ -1,10 +1,10 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: my-pv
+  name: hostpath-pv
 spec:
-  storageClassName: localdisk
-  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: localpath
+  persistentVolumeReclaimPolicy: Retain
   capacity:
     storage: 1Gi
   accessModes:
