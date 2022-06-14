@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nfs-server
+  labels:
+    role: nfs-server
+spec:
+  containers:
+  - name: nfs-server
+    image: erichough/nfs-server
+    ports:
+    - name: nfs
+      containerPort: 2049
+    - name: rpcbind
+      containerPort: 111
+    - name: statd
+      containerPort: 32765
+    - name: mountd
+      containerPort: 32767 
+    securityContext:
+       privileged: true
+    env:
+    - name: NFS_EXPORT_0
+      value: '/exports *(rw,no_subtree_check)'
+    volumeMounts:
+    - name: export
+      mountPath: '/exports'
+  volumes:
+  - name: export
+    hostPath:
+      path: /tmp

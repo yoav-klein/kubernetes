@@ -1,0 +1,3 @@
+[submodule "volumes/persistent-volumes/nfs/docker-nfs-server"]
+	path = volumes/persistent-volumes/nfs/docker-nfs-server
+	url = https://github.com/yoav-klein/docker-nfs-server.git

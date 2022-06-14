@@ -92,4 +92,7 @@ setup_master()
 	setup_base
 	init_cluster
 	calico
+
+        echo 'source <(kubectl completion bash)' >>~/.bashrc
 }
+
