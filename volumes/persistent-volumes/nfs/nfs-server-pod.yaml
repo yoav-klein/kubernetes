@@ -21,11 +21,11 @@ spec:
        privileged: true
     env:
     - name: NFS_EXPORT_0
-      value: '/exports *(rw,no_subtree_check)'
+      value: '/nfs-export *(rw,no_subtree_check)'
     volumeMounts:
     - name: export
-      mountPath: '/exports'
+      mountPath: '/nfs-export'
   volumes:
   - name: export
     hostPath:
-      path: /tmp
+      path: '/mnt/nfs-export'

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: update-content-pod
+spec:
+  containers:
+  - image: busybox
+    name: busybox
+    command: ['sh', '-c', 'while true; do date > /mnt/index.html; hostname >> /mnt/index.html; sleep 10; done']
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - name: nfs
+        mountPath: "/mnt"
+  volumes:
+  - name: nfs
+    persistentVolumeClaim:
+      claimName: nfs-pvc
