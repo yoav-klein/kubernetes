@@ -1,6 +1,6 @@
 
 
-# NFS Persisten Volume
+# NFS Persistent Volume
 ---
 
 This example demonstrate the use of NFS as a Persistent Volume in Kubernetes.
@@ -26,13 +26,13 @@ Learn deeper about this if you need.
 In order for it to run, you'll need to load the kernel modules: `nfs`, `nfsd`.
 
 In this example, we run the NFS server in a pod, and expose it as a service. The directory
-that the NFS exposes is some temp directory in the host where the pod runs. We need to create
+that the NFS exposes is some directory in the host where the pod runs. We need to create
 this directory before-hand and change its permissions.
 
 We use a container image that contains a NFS server. For reference: `https://github.com/yoav-klein/docker-nfs-server` 
 
 
-## Set up the NFS server
+## Some required setup
 ---
 First, we'll need to create the exported directory on each node machine, since we don't know
 where the pod will run. We also need to load the kernel modules required to run a NFS server.
@@ -49,12 +49,15 @@ $ sudo chmod 777 /mnt/nfs-export
 $ sudo modprobe nfs nfsd
 ```
 
-Now, create the nfs-server pod:
+## Run the NFS server
+---
+Now, create the nfs-server pod and service:
 ```
 $ kubectl apply -f nfs-server-pod.yaml
+$ kubectl apply -f nfs-server-service.yaml
 ```
 
-## Create a PersistentVolume and PersistentVolumeClain
+## Create a PersistentVolume and PersistentVolumeClaim
 ---
 After we have a running NFS server exposed as a service, we create a `PersistentVolume`
 and a `PersistentVolumeClaim`.
@@ -72,7 +75,7 @@ $ kubectl apply -f nfs-pv.yaml
 $ kubectl apply -f nfs-pvc.yaml
 ```
 
-## Create the pods using the volume
+## Create the pods that use the volume
 ---
 
 In this example, we create a pod that updates the content of a web page, and another
