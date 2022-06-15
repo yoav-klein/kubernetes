@@ -32,8 +32,11 @@ this directory before-hand and change its permissions.
 We use a container image that contains a NFS server. For reference: `https://github.com/yoav-klein/docker-nfs-server` 
 
 
-## Some required setup
+## Running the example
 ---
+
+### Some required setup
+
 First, we'll need to create the exported directory on each node machine, since we don't know
 where the pod will run. We also need to load the kernel modules required to run a NFS server.
 
@@ -49,7 +52,7 @@ $ sudo chmod 777 /mnt/nfs-export
 $ sudo modprobe nfs nfsd
 ```
 
-## Run the NFS server
+### Run the NFS server
 ---
 Now, create the nfs-server pod and service:
 ```
@@ -57,7 +60,7 @@ $ kubectl apply -f nfs-server-pod.yaml
 $ kubectl apply -f nfs-server-service.yaml
 ```
 
-## Create a PersistentVolume and PersistentVolumeClaim
+### Create a PersistentVolume and PersistentVolumeClaim
 ---
 After we have a running NFS server exposed as a service, we create a `PersistentVolume`
 and a `PersistentVolumeClaim`.
@@ -75,7 +78,7 @@ $ kubectl apply -f nfs-pv.yaml
 $ kubectl apply -f nfs-pvc.yaml
 ```
 
-## Create the pods that use the volume
+### Create the pods that use the volume
 ---
 
 In this example, we create a pod that updates the content of a web page, and another
