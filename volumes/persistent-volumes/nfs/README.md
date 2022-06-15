@@ -37,24 +37,37 @@ We use a container image that contains a NFS server. For reference: `https://git
 
 ### Some required setup
 
-First, we'll need to create the exported directory on each node machine, since we don't know
-where the pod will run. We also need to load the kernel modules required to run a NFS server.
+We'll run our NFS server on one specific node, choose the one it will be.
+On that node, we'll create a directory to be exported with NFS, and do some setup.
 
-You also need to install `nfs-common` on each node
+You also need to install `nfs-common` on each node in the cluster.
 
-On each node machine, run the following commands:
-
+On each node machine, run the following command:
 ```
 $ sudo apt-get install nfs-common
+```
+And on the node where the server pod will run, run:
+```
 $ sudo mkdir /mnt/nfs-export
 $ sudo chown nobody:nogroup /mnt/nfs-export
 $ sudo chmod 777 /mnt/nfs-export
 $ sudo modprobe nfs nfsd
 ```
 
+### Getting the cluster ready
+---
+Create a namespace named `nfs-pv`. It's recommended to set the context 
+to use that namespace:
+```
+$ kubectl create ns nfs-pv
+$ kubectl config set-context --current namespace=nfs-pv
+```
+
 ### Run the NFS server
 ---
 Now, create the nfs-server pod and service:
+
+First, set the `nodeName` of the `nfs-server-pod.yaml` to the node you chosen to run the NFS server on.
 ```
 $ kubectl apply -f nfs-server-pod.yaml
 $ kubectl apply -f nfs-server-service.yaml
@@ -101,3 +114,11 @@ Now take the IP of the `web-server` service, and curl to it:
 $ curl <web-server-ClusterIP>
 ```
 
+
+### Cleanup
+---
+Delete the namepsace
+```
+$ kubectl delete ns nfs-pv
+$ kubectl delete pv nfs-pv
+```

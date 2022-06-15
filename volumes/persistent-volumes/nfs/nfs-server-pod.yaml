@@ -4,7 +4,9 @@ metadata:
   name: nfs-server
   labels:
     role: nfs-server
+  namespace: nfs-pv
 spec:
+  nodeName: node2
   containers:
   - name: nfs-server
     image: erichough/nfs-server
