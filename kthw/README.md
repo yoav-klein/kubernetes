@@ -24,8 +24,37 @@ load balancer your self, and just provide the IP of this load balancer.
 
 <img src=".attachments/kthw.png" width="800">
 
+### Controller Nodes
+on each controller node, we have the following components:
+* etcd
+* kube-apiserver
+* kube-scheduler
+* kube-controller-manager
+
+### Worker Nodes
+on each worker node, we have the following componets:
+* containerd
+* kubelet
+* kube-proxy
+
 ## Project Architecture
 
+The project is built so that for each step in the bootstraping
+process there's a directory containing all the files needed to perform this step.
+So for example the `certificates` directory contains everything's needed to create
+all the certificates needed in order to run our cluster.
+
+The steps for bootstraping the cluster are:
+1. Generate certificates
+2. Generate kubeconfigs
+3. Install and run etcd on controller nodes
+4. Install and run kubernetes components on controller nodes
+5. Install and run a container runtime and kubernetes components on worker nodes
+
+
+## Usage
+
+In order to understand how to use the project and set up a cluster, refer to the User Guide page.
 
 ## Prerequisites
 
