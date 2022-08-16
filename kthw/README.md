@@ -22,7 +22,7 @@ In our project, you can set up (virtually) as many controllers and workers you l
 If you choose to set up a multi-controller cluster, you'll need to take care of the 
 load balancer your self, and just provide the IP of this load balancer.
 
-![picture](.attachments/kthw.png =100x100)
+<img src=".attachments/kthw.png" width="800">
 
 ## Project Architecture
 
