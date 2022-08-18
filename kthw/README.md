@@ -59,4 +59,4 @@ See the [Technical Details](docs/TECHNICAL.md) page for further details.
 
 ## Usage
 
-See the User Guide page for instructions about how to use this tool.
+See the [User Guide](docs/USERGUIDE.md) page for instructions about how to use this tool.
