@@ -17,8 +17,11 @@ KUBECONFIG_TARGETS =$(patsubst %,$(KUBECONFIGS_OUTPUT)/%,$(KUBECONFIGS))
 
 
 
-all: $(KUBECONFIG_TARGETS)
+all: print_start $(KUBECONFIG_TARGETS)
 	@source $(LOG_LIB) && print_success "GENERATED KUBECONFIGS"
+
+print_start:
+	@source $(LOG_LIB) && print_title "generating kubeconfigs"
 
 $(CERTIFICATES_OUTPUT)/%.crt:
 	@make -C $(CERTIFICATES_DIR) $@
