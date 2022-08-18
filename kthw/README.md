@@ -55,7 +55,7 @@ The steps for bootstraping the cluster are:
 Each step has its own directory in the project's source tree which is responsible of performing
 this step. This directory contains either a Makefile or a bash script which does the heavy lifting.
 
-See the [Technical Details](./docs.TECHNICAL.md) page for further details.
+See the [Technical Details](docs/TECHNICAL.md) page for further details.
 
 ## Usage
 
