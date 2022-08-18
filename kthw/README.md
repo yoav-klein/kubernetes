@@ -50,26 +50,13 @@ The steps for bootstraping the cluster are:
 3. Install and run etcd on controller nodes
 4. Install and run kubernetes components on controller nodes
 5. Install and run a container runtime and kubernetes components on worker nodes
+6. Configure netwokring and DNS in the cluster
 
+Each step has its own directory in the project's source tree which is responsible of performing
+this step. This directory contains either a Makefile or a bash script which does the heavy lifting.
+
+See the Technical Details page for further details.
 
 ## Usage
 
-In order to understand how to use the project and set up a cluster, refer to the User Guide page.
-
-## Prerequisites
-
-You'll need the following infrastructure:
-* At least 1 node for controllers
-* At least 1 node for workers
-* All the nodes should be accessible from all other nodes
-* All the nodes must have a user with the same name, and in this user's home directory's `authorized_key`
-  there must be a common public key, so that  you can run ssh commands on all the nodes from one of the nodes.
- 
-## Getting Ready
-
-In order to get this going, you'll need to do the followings:
-
-* Put the private key that is needed to run commands on all the nodes in a file called `kthw_key` in the root of the project
-* Configure
-
-
+See the User Guide page for instructions about how to use this tool.
