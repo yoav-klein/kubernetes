@@ -85,13 +85,13 @@ _distribute_node() (
 
     log_debug "distributing to $name"
     
-    ssh -i $SSH_PRIVATE_KEY "$username@$ip" "mkdir -p $ETCD_HOME"
+    ssh -i $SSH_PRIVATE_KEY "$username@$ip" "mkdir -p $ETCD_HOME" > /dev/null
 
-    scp -i $SSH_PRIVATE_KEY "$CERTIFICATES_OUTPUT/ca-etcd.crt" "$username@$ip:$ETCD_HOME"
-    scp -i $SSH_PRIVATE_KEY "$CERTIFICATES_OUTPUT/etcd-server-${name}.crt" "$username@$ip:$ETCD_HOME/etcd-server.crt"
-    scp -i $SSH_PRIVATE_KEY "$CERTIFICATES_OUTPUT/etcd-server-${name}.key" "$username@$ip:$ETCD_HOME/etcd-server.key"
-    scp -i $SSH_PRIVATE_KEY "$ETCD_DEPLOYMENT/etcd_agent.sh" "$username@$ip:$ETCD_HOME"
-    scp -i $SSH_PRIVATE_KEY "$ETCD_DEPLOYMENT/$name.etcd.service" "$username@$ip:$ETCD_HOME/etcd.service"
+    scp -i $SSH_PRIVATE_KEY "$CERTIFICATES_OUTPUT/ca-etcd.crt" "$username@$ip:$ETCD_HOME" > /dev/null
+    scp -i $SSH_PRIVATE_KEY "$CERTIFICATES_OUTPUT/etcd-server-${name}.crt" "$username@$ip:$ETCD_HOME/etcd-server.crt" > /dev/null
+    scp -i $SSH_PRIVATE_KEY "$CERTIFICATES_OUTPUT/etcd-server-${name}.key" "$username@$ip:$ETCD_HOME/etcd-server.key" > /dev/null
+    scp -i $SSH_PRIVATE_KEY "$ETCD_DEPLOYMENT/etcd_agent.sh" "$username@$ip:$ETCD_HOME" > /dev/null
+    scp -i $SSH_PRIVATE_KEY "$ETCD_DEPLOYMENT/$name.etcd.service" "$username@$ip:$ETCD_HOME/etcd.service" > /dev/null
     
     # install jq on nodes
     ssh -i $SSH_PRIVATE_KEY "$username@$ip" "sudo apt-get update" > /dev/null
