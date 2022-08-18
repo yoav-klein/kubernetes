@@ -14,7 +14,7 @@ gen_kubeconfig() {
     client_cert=$6
     client_key=$7
      
-    log_info "generating $kubeconfig_path"
+    log_info "generating $(basename $kubeconfig_path)"
     if [ -z "$cluster_name" ] || [ -z "$user_name" ] || \
        [ -z "$user_name" ] || [ -z "$apiserver_ip" ] || \
        [ -z "$kubeconfig_path" ] || [ -z "$ca" ] || \
@@ -45,7 +45,8 @@ gen_kubeconfig() {
 
     > /dev/null kubectl config use-context default --kubeconfig=$kubeconfig_path \
     || { log_error "kubectl config use-context failed"; return 1; }
-
+    
+    log_info "generated $(basename $kubeconfig_path)"
 
 }
 
