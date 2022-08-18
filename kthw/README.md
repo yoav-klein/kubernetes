@@ -20,7 +20,7 @@ the controller nodes.
 
 In our project, you can set up (virtually) as many controllers and workers you like.
 If you choose to set up a multi-controller cluster, you'll need to take care of the 
-load balancer your self, and just provide the IP of this load balancer.
+load balancer yourself (More details in the User Guide page), and just provide the IP of this load balancer.
 
 <img src=".attachments/kthw.png" width="800">
 
@@ -55,7 +55,7 @@ The steps for bootstraping the cluster are:
 Each step has its own directory in the project's source tree which is responsible of performing
 this step. This directory contains either a Makefile or a bash script which does the heavy lifting.
 
-See the Technical Details page for further details.
+See the [Technical Details](./docs.TECHNICAL.md) page for further details.
 
 ## Usage
 
