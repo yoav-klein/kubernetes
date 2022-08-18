@@ -6,7 +6,7 @@ source ../lib
 source ../.env
 source $LOG_LIB
 
-set_log_level "DEBUG"
+set_log_level ${LOG_LEVEL:-DEBUG}
 
 # check data file exists
 [ -f "$ROOT_DATA_FILE" ] || { log_error "$ROOT_DATA_FILE not found !"; exit 1; }
@@ -111,12 +111,18 @@ build() {
     log_info "created deployment"
 }
 
+distribute() {
+    print_title "distributing etcd files to nodes"
+    _distribute && print_success "succeed to distribute etcd files to nodes"
+}
 
 
 ## delete the etcd_home directory on all nodes
 # if some node is in either installed, loaded or active state, abort
 # and move to next node
 clean_nodes() {
+    print_title "cleaning etcd home direcotry from nodes"
+
     for node in ${nodes[@]}; do
         name=$(echo $node | jq -r '.name')
         ip=$(echo $node | jq -r '.ip')
@@ -146,28 +152,39 @@ clean_nodes() {
 
 
 install_binaries() {
+    print_title "installing etcd binaries on nodes"
     _execute_on_nodes "install_binaries" "stop" || { log_error "install binaries failed"; return 1; } 
+    print_success "succeed to install etcd binaries on nodes"
 }
 
 uninstall_binaries() {
-    _execute_on_nodes "uninstall_binaries" "cont" || { log_error "uninstall binaries failed"; return 1; } 
+    print_title "uninstalling etcd binaries from nodes"
+    _execute_on_nodes "uninstall_binaries" "cont" || { log_error "uninstall binaries failed"; return 1; }
+    print_success "succeed to uninstall binaries from nodes"
 }
 
 install_service() {
-    _execute_on_nodes "install_service" "stop" || { log_error "install service failed"; return 1; } 
+    print_title "installing etcd service on nodes"
+    _execute_on_nodes "install_service" "stop" || { log_error "install service failed"; return 1; }
+    print_success "succeed to install etcd service on nodes"
 }
 
-
 uninstall_service() {
-    _execute_on_nodes "uninstall_service" "cont" || { log_error "uninstall service failed"; return 1; } 
+    print_title "uninstalling etcd service fro nodes"
+    _execute_on_nodes "uninstall_service" "cont" || { log_error "uninstall service failed"; return 1; }
+    print_success "succeed to uninstall etcd service from nodes"
 }
 
 start_service() {
+    print_title "starting etcd service on nodes"
     _execute_on_nodes "start" "stop" || { log_error "start service failed"; return 1; } 
+    print_success "succeed to start etcd service on nodes"
 }
 
 stop_service() {
+    print_title "stopping etcd service on nodes"
     _execute_on_nodes "stop" "cont" || { log_error "stop service failed"; return 1; } 
+    print_success "succeed to stop etcd service on nodes"
 }
 
 
@@ -177,9 +194,9 @@ test_etcd() {
     ssh -i $SSH_PRIVATE_KEY "$username@$first_controller_ip" "sudo $agent_script test"
     
     if [ $? = 0 ]; then
-        big_success "ETCD IS UP AND RUNNING"
+        print_success "ETCD IS UP AND RUNNING"
     else
-        echo -e  "${COLOR_RED}!!! ETCD TEST FAILED !!!${RESET}"
+        print_error  "!!! ETCD TEST FAILED !!!"
         exit 1
     fi
 }
@@ -214,29 +231,25 @@ status() {
 bootstrap() {
     build || { log_error "failed creating deployment"; return 1; }
     
-    log_debug "distributing etcd files"
+    print_title "distributing etcd files"
     distribute
     if [ $? != 0 ]; then
         log_error "distribution of etcd files failed"
         return 1
     fi
     
-    log_debug "installing binaries on all nodes"
     install_binaries
     if [ $? != 0 ]; then
         log_error "installing etcd binaries failed"
         return 1
     fi
 
-
-    log_debug "installing etcd service on all nodes"
     install_service
     if [ $? != 0 ]; then
         log_error "installing etcd service failed"
         return 1
     fi
 
-    log_debug "starting etcd on all nodes"
     start_service
     if [ $? != 0 ]; then
         log_error "failed to start service"
@@ -249,16 +262,12 @@ bootstrap() {
 reset() {
     local sc=0
 
-    log_debug "stopping service on all nodes"
     stop_service || sc=1 
 
-    log_debug "uninstalling service on all nodes"
     uninstall_service || sc=1
 
-    log_debug "uninstalling binaries on all nodes"
     uninstall_binaries || sc=1
 
-    log_debug "cleaning nodes"
     clean_nodes || sc=1
 
     [ $sc = 0 ] && print_success "reset etcd succeed" || log_info "reset failed on some operations"

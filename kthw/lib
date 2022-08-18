@@ -107,9 +107,8 @@ _execute_on_nodes() {
 }
 
 
-distribute() {
-    echo_title "distributing to nodes"
-    
+_distribute() {
+    log_debug "distributing to nodes" 
     declare -a failed_nodes
     declare -a succeed_nodes
 
