@@ -7,6 +7,7 @@ source ../.env
 source $LOG_LIB
 
 set_log_level ${LOG_LEVEL:-DEBUG}
+if ! $HUMAN; then unset_human; fi
 
 # check data file exists
 [ -f "$ROOT_DATA_FILE" ] || { log_error "$ROOT_DATA_FILE not found !"; exit 1; }
@@ -104,11 +105,12 @@ _distribute_node() (
 #################### commands functions ##########################
 
 build() {
+    print_title "build: creating deployment"
     if [ ! -d "$ETCD_DEPLOYMENT" ]; then mkdir "$ETCD_DEPLOYMENT"; else rm $ETCD_DEPLOYMENT/*; fi
     _generate_service_files || return 1
     _patch_agent_script || return 1
 
-    log_info "created deployment"
+    print_success "created deployment"
 }
 
 distribute() {

@@ -17,10 +17,6 @@ big_success() {
     echo -e "$RESET"
 }
 
-echo_title() {
-    echo -e "${TITLE} $1 ${RESET}"
-}
-
 run_scp() {
     username=$1
     machine=$2
