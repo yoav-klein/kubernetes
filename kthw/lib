@@ -88,7 +88,7 @@ _execute_on_nodes() {
             continue
         fi
 
-        log_info "successfully executed $function on $name"
+        log_debug "successfully executed $function on $name"
     done
 
     if (( ${#failed_nodes[@]} > 0 )); then

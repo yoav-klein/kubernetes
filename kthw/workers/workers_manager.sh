@@ -6,7 +6,8 @@ source ../lib
 
 source $LOG_LIB
 
-set_log_level DEBUG
+set_log_level ${LOG_LEVEL:-DEBUG}
+if ! $HUMAN; then unset_human; fi
 
 [ -f "$ROOT_DATA_FILE" ] || { log_error "root data file not found!"; exit 1 ;}
 
@@ -89,7 +90,7 @@ _distribute_node() (
 
 
 build() {
-    echo_title "creating deployment"
+    print_title "build: creating deployment"
     if [ ! -d "$WORKERS_DEPLOYMENT" ]; then mkdir "$WORKERS_DEPLOYMENT"; else rm $WORKERS_DEPLOYMENT/*; fi
 
     _generate_kubelet_service_files || { log_error "failed generating kubelet service files"; return 1; }
@@ -100,7 +101,15 @@ build() {
     cluster_dns=$(cat $ROOT_DATA_FILE  | jq -r '.serviceIpRange' | sed -e 's/\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1.10/')
     sed "s/{{CLUSTER_DNS}}/$cluster_dns/" kubelet-config.yaml.template > "$WORKERS_DEPLOYMENT/kubelet-config.yaml"
 
+    print_success "succeed to create workers deployment"
 }
+
+
+distribute() {
+    print_title "distributing workers files to nodes"
+    _distribute && print_success "succeed to distribute workers files to nodes"
+}
+
 
 clean_nodes() {
     echo_title "cleaning nodes"
@@ -133,37 +142,59 @@ clean_nodes() {
 }
 
 install_prerequisites() {
-    _execute_on_nodes "install_prerequisites" "stop" || { log_error "install prerequisites failed"; return 1; } 
+    print_title "installing workers prerequisites on nodes"
+    _execute_on_nodes "install_prerequisites" "stop" || { log_error "install prerequisites failed"; return 1; }
+    print_success "succeed to install prerequisites on nodes"
 }
 
 uninstall_prerequisites() {
+    print_title "uninstalling prerequisites from nodes"
     _execute_on_nodes "uninstall_prerequisites" "cont" || { log_error "uninstall prerequisites failed"; return 1; } 
+    print_success "succeed to uninstall prerequisites from nodes"
 }
-
 
 
 install_binaries() {
+    print_title "installing workers binaries on  nodes"
     _execute_on_nodes "install_binaries" "stop" || { log_error "install binaries failed"; return 1; } 
+    print_success "succeed to install workers binaries on nodes"
 }
 
 uninstall_binaries() {
+    print_title "uninstalling workers binaries from nodes"
     _execute_on_nodes "uninstall_binaries" "cont" || { log_error "uninstall binaries failed"; return 1; } 
+    print_success "succeed to uninstall workers binaries from nodes"
 }
 
 install_services() {
+    print_title "installing workers services on nodes"
     _execute_on_nodes "install_services" "stop" || { log_error "install services failed"; return 1; } 
+    print_success "uninstalling workers services from nodes"
 }
 
 uninstall_services() {
+    print_title "uninstalling services from nodes"
     _execute_on_nodes "uninstall_services" "cont" || { log_error "uninstall services failed"; return 1; } 
+    print_success "succeed to uninstall workers services from nodes"
 }
 
 start_services() {
+    print_title "starting workers services on nodes"
     _execute_on_nodes "start" "stop" || { log_error "start services failed"; return 1; } 
+    print_success "succeed to start workers services on nodes"
 }
 
 stop_services() {
+    print_title "stopping workers services on nodes"
     _execute_on_nodes "stop" "cont" || { log_error "stop services failed"; return 1; } 
+    print_success "succeed to stop workers services on nodes"
+}
+
+
+install_binaries() {
+    print_title "installing workers binaries on  nodes"
+    _execute_on_nodes "install_binaries" "stop" || { log_error "install binaries failed"; return 1; } 
+    print_success "succeed to install workers binaries on nodes"
 }
 
 
@@ -229,7 +260,7 @@ bootstrap() {
         return 1
     fi
 
-    log_debug "starting control plane on all nodes"
+    log_debug "starting workers on all nodes"
     start_services
     if [ $? != 0 ]; then
         log_error "failed to start services"
@@ -267,7 +298,7 @@ usage() {
     echo "Usage:"
     echo "cp_manager [build, distribute, run_on_nodes, clean_nodes, clean]"
     echo "Commands:"
-    echo "build       - Generate necessary files to run control plane on nodes"
+    echo "build       - Generate necessary files to run workers on nodes"
     echo "distribute              - Distribute the files to the nodes"
     echo "install_prerequisites   - Install containerd and rest of prerequisites"
     echo "uninstall_prerequisites - Uninstall containerd and prerequisites"
