@@ -57,7 +57,7 @@ k8s_install()
     echo_title "installing kubernetes components"
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kuberenets.list
-    sudo apt-get update && sudo apt-get install -y kubelet=1.21.0-00 kubeadm=1.21.0-00 kubectl=1.21.0-00
+    sudo apt-get update && sudo apt-get install -y kubelet=${kube_version}-00 kubeadm=${kube_version}-00 kubectl=${kube_version}-00
     sudo apt-mark hold kubelet kubeadm kubectl
 
 }
@@ -66,7 +66,7 @@ k8s_install()
 init_cluster()
 {
     echo_title "bootstrapping cluster"
-    sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.21.0
+    sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=${kube_version}
     mkdir -p $HOME/.kube
     sudo cp -i  /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -97,4 +97,25 @@ setup_master()
 
     echo 'source <(kubectl completion bash)' >>~/.bashrc
 }
+
+node_type=''
+while [ "$node_type" != "master" ] && [ "$node_type" != "worker" ]; do
+    echo $node_type
+    read -p "What kind of node is this? [master/worker] " node_type
+done
+
+version=''
+valid_version=false
+
+while ! $valid_version; do
+    read -p "Enter a valid kubernetes version (e.g. 1.24.0): " kube_version
+    if [[ $kube_version =~ ^[0-9]\.[0-9]{2}\.[0-9]$ ]]; then valid_version=true; fi
+done
+
+[ $node_type = "master" ] && setup_master
+[ $node_type = "worker" ] && {
+    setup_base
+    echo "Now run the join command given by the master"
+}
+
 
