@@ -6,7 +6,7 @@ cp -r vim/.vim vim/.vimrc ~
 
 
 ## configure git
-git config --global user.email yoavklein25@gmail.com
+git config --global user.name yoav
 git config --global user.email yoavklein25@gmail.com
 
 if [ ! -f ~/.git_askpass ]; then
