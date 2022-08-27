@@ -1,0 +1,64 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: joke-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: joke-web
+  template: # pod template
+    metadata: # we're not specifying a name, since multiple pods will be created
+      labels: 
+        app: joke-web
+    spec:
+      containers:
+      - name: joke-web
+        image: yoavklein3/joke_web:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: joke-web
+spec:
+  selector: 
+    app: joke-web
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: joke-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: joke-api
+  template: # pod template
+    metadata: # we're not specifying a name, since multiple pods will be created
+      labels: 
+        app: joke-api
+    spec:
+      containers:
+      - name: joke-web
+        image: yoavklein3/joke_api:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: joke-api
+spec:
+  selector: 
+    app: joke-api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
