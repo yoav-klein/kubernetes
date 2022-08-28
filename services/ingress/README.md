@@ -56,6 +56,36 @@ c. Now run `curl joke.com:8080/web` or `curl joke.com:8080/api`
 
 And there you go!
 
+## TLS
+Ingress also provides you with SSL termination. This means that the Ingress Controller takes care of TLS for you.
+
+### 1. Create the TLS secret
+We already created before-hand a TLS certificate + key for our application, signed by the `ca.crt` we have here.
+We then run `base64` on these certificate and key and put them in a Secret object, which we apply to our namespace:
+
+```
+$ kubectl apply -f tls-secret.yaml
+```
+
+### 2. Update the Ingress object
+Now we need our Ingress object to use our certificate. We're basically saying: when we get a request
+for the host `joke.com`, we want to use this certificate.
+
+Run
+```
+$ kubectl apply -f ingress-with-tls.yaml
+```
+
+### 3. Test
+Now we need to expose the other port of `ingress-nginx-controller` service, which is 443.
+```
+$ kubectl port-forward -n ingress-nginx ingress-nginx-controller 8081:443
+```
+
+And run:
+```
+$ curl --cacert ca.crt joke.com:8081/web
+```
 
 ## Cleanup
 1. Delete the `joke.com` entry from the `/etc/hosts` file
