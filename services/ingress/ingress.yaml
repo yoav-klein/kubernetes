@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jokes
+  namespace: ingress-demo
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: joke.com
+    http:
+      paths:
+      - path: /web
+        pathType: Exact
+        backend:
+          service:
+            name: joke-web
+            port:
+              number: 80
+      - path: /api
+        pathType: Exact
+        backend:
+            service:
+                name: joke-api
+                port:
+                  number: 80
