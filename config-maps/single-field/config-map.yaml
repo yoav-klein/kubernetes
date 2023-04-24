@@ -1,0 +1,16 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dog-config
+  namespace: configmap
+data:
+  color: yellow
+  type: labrador
+  size: big
+  story: |+
+    Hello, this is a story
+    about a little boy, who wanted
+    to write a ConfigMap
+
+  
