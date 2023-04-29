@@ -15,7 +15,9 @@ spec:
       mountPath: /var/story.txt
       subPath: story
       readOnly: true             
-
+    - name: config
+      mountPath: /var/nested/color
+      subPath: color
   volumes:
   - name: config
     configMap:
