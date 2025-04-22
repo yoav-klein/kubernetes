@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-stress
+  labels:
+    app: java-stress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-stress
+  template:
+    metadata:
+      labels:
+        app: java-stress
+    spec:
+      containers:
+      - name: stress
+        image: yoavklein3/java-stress:0.5
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+        
+        env:
+        - name: SIZE
+          value: "100"
+        - name: JAVA_TOOL_OPTIONS
+          value: "-XX:MaxRAMPercentage=80"

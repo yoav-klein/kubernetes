@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stress
+spec:
+  containers:
+  - name: stress
+    image: yoavklein3/java-stress:0.5
+    resources:
+      limits:
+        memory: "1000Mi"
+    env:
+      - name: SIZE
+        value: "100"
+      - name: JAVA_TOOL_OPTIONS
+        value: "-XX:MaxRAMPercentage=80"
