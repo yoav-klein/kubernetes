@@ -1,7 +1,7 @@
 #!/bin/bash
 
 containerd_version=2.1.4
-arch=amd64
+arch=arm64
 cni_version=1.7.1
 kube_version=1.33
 
@@ -22,9 +22,9 @@ EOF
 function install_kube_components() {
     sudo apt-get update
     sudo apt-get install -y apt-transport-https ca-certificates curl gpg
-    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.${kube_version}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v${kube_version}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
-    echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${kube_version}/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${kube_version}/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
     sudo apt-get update
     sudo apt-get install -y kubelet kubeadm kubectl
     sudo apt-mark hold kubelet kubeadm kubectl
@@ -66,10 +66,11 @@ function init_cluster() {
 
 }
 
-#install_containerd
-#install_runc
-#install_cni
+system_config
+install_containerd
+install_runc
+install_cni
 
 install_kube_components
 
-init_cluster
+#init_cluster
