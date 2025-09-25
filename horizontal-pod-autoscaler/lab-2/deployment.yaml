@@ -1,0 +1,34 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: memory-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memory-consumer
+  template:
+    metadata:
+      namespace: default
+      name: memory-consumer
+      labels:
+        app: memory-consumer
+    spec:
+      containers:
+        - name: memory-consumer
+          image: yoavklein3/memory-consumer:0.2
+          resources:
+            requests:
+              cpu: "256m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+spec:
+  containers:
+    - name: client
+      image: yoavklein3/net-tools:0.3
+      command: ["sleep", "Infinity"]
+
