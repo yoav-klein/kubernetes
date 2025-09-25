@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webhook-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-annotator
+  namespace: webhook-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-annotator
+  template:
+    metadata:
+      labels:
+        app: pod-annotator
+    spec:
+      containers:
+      - name: pod-annotator
+        image: pod-annotator:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8443
+        volumeMounts:
+        - name: webhook-tls
+          mountPath: "/etc/webhook/certs"
+          readOnly: true
+      volumes:
+      - name: webhook-tls
+        secret:
+          secretName: pod-annotator-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pod-annotator-svc
+  namespace: webhook-system
+spec:
+  selector:
+    app: pod-annotator
+  ports:
+  - port: 443
+    targetPort: 8443
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: pod-annotator
+webhooks:
+- name: pod-annotator.example.com
+  admissionReviewVersions: ["v1", "v1beta1"]
+  sideEffects: None
+  timeoutSeconds: 5
+  failurePolicy: Ignore
+  clientConfig:
+    service:
+      namespace: webhook-system
+      name: pod-annotator-svc
+      path: "/mutate"
+    caBundle: ${CA_BUNDLE}
+  rules:
+  - apiGroups: [""]
+    apiVersions: ["v1"]
+    operations: ["CREATE"]
+    resources: ["pods"]
+    scope: "Namespaced"
+  namespaceSelector:
+    matchLabels:
+      pod-annotation: enabled
