@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: nginx-container
+          image: nginx:latest
+          ports:
+          - containerPort: 80
+          readinessProbe:
+            failureThreshold: 1
+            exec:
+              command: [ "/bin/sh", "-c", "if [ -f /tmp/shutdown ]; then exit 1; else exit 0; fi" ]
+          lifecycle:
+            preStop:
+              exec:
+                command: [
+                    "/bin/sh", "-c", "touch /tmp/shutdown; sleep 60"
+                ]
+      
